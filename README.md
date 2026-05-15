@@ -273,15 +273,16 @@ DFS also does not always find the shortest path.
 
 ### Project Structure
 
-![Project Structure](docs/screenshots/project-structure.png)
+![Project Structure](./docs/screenshots/project-structure.png)
 
 ### Graph Structure and Traversal Output
 
-![Graph Traversal Output](docs/screenshots/graph-traversal-output.png)
+![Graph Traversal Output](./docs/screenshots/graph-traversal-output.png)
 
 ### Performance Results
 
-![Performance Results](docs/screenshots/performance-results.png)
+![Performance Results](./docs/screenshots/performance-results.png)
+
 ---
 
 ## Reflection
