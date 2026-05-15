@@ -289,6 +289,8 @@ DFS also does not always find the shortest path.
 
 During this assignment, I learned how to represent a graph using an adjacency list. I understood that each vertex can store a list of its connected vertices.
 
+
+
 I also learned the difference between BFS and DFS. BFS uses a queue and visits vertices level by level. DFS uses recursion and goes deeper before returning back.
 
 The main challenge was to avoid visiting the same vertex more than once. I solved this by using a visited structure. It helps prevent repeated visits and avoids problems when the graph contains cycles.
