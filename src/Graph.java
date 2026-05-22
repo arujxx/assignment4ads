@@ -5,7 +5,7 @@ import java.util.Queue;
 
 public class Graph {
     private HashMap<Integer, Vertex> vertices;
-    private HashMap<Integer, ArrayList<Integer>> adjacencyList;
+    private HashMap<Integer, ArrayList<Edge>> adjacencyList;
 
     public Graph() {
         vertices = new HashMap<>();
@@ -18,11 +18,19 @@ public class Graph {
     }
 
     public void addEdge(int from, int to) {
+        addEdge(from, to, 1);
+    }
+
+    public void addEdge(int from, int to, int weight) {
         if (vertices.containsKey(from) && vertices.containsKey(to)) {
-            adjacencyList.get(from).add(to);
+            Vertex source = vertices.get(from);
+            Vertex destination = vertices.get(to);
 
+            Edge edge1 = new Edge(source, destination, weight);
+            Edge edge2 = new Edge(destination, source, weight);
 
-            adjacencyList.get(to).add(from);
+            adjacencyList.get(from).add(edge1);
+            adjacencyList.get(to).add(edge2);
         }
     }
 
@@ -32,10 +40,10 @@ public class Graph {
         for (int vertex : adjacencyList.keySet()) {
             System.out.print(vertex + ": ");
 
-            ArrayList<Integer> neighbors = adjacencyList.get(vertex);
+            ArrayList<Edge> edges = adjacencyList.get(vertex);
 
-            for (int neighbor : neighbors) {
-                System.out.print(neighbor + " ");
+            for (Edge edge : edges) {
+                System.out.print(edge.getDestination().getId() + "(" + edge.getWeight() + ") ");
             }
 
             System.out.println();
@@ -57,9 +65,11 @@ public class Graph {
             int current = queue.remove();
             System.out.print(current + " ");
 
-            ArrayList<Integer> neighbors = adjacencyList.get(current);
+            ArrayList<Edge> edges = adjacencyList.get(current);
 
-            for (int neighbor : neighbors) {
+            for (Edge edge : edges) {
+                int neighbor = edge.getDestination().getId();
+
                 if (!visited.get(neighbor)) {
                     visited.put(neighbor, true);
                     queue.add(neighbor);
@@ -85,14 +95,17 @@ public class Graph {
         visited.put(current, true);
         System.out.print(current + " ");
 
-        ArrayList<Integer> neighbors = adjacencyList.get(current);
+        ArrayList<Edge> edges = adjacencyList.get(current);
 
-        for (int neighbor : neighbors) {
+        for (Edge edge : edges) {
+            int neighbor = edge.getDestination().getId();
+
             if (!visited.get(neighbor)) {
                 dfsHelper(neighbor, visited);
             }
         }
     }
+
     public void bfsSilent(int start) {
         HashMap<Integer, Boolean> visited = new HashMap<>();
         Queue<Integer> queue = new LinkedList<>();
@@ -107,9 +120,11 @@ public class Graph {
         while (!queue.isEmpty()) {
             int current = queue.remove();
 
-            ArrayList<Integer> neighbors = adjacencyList.get(current);
+            ArrayList<Edge> edges = adjacencyList.get(current);
 
-            for (int neighbor : neighbors) {
+            for (Edge edge : edges) {
+                int neighbor = edge.getDestination().getId();
+
                 if (!visited.get(neighbor)) {
                     visited.put(neighbor, true);
                     queue.add(neighbor);
@@ -131,12 +146,71 @@ public class Graph {
     private void dfsSilentHelper(int current, HashMap<Integer, Boolean> visited) {
         visited.put(current, true);
 
-        ArrayList<Integer> neighbors = adjacencyList.get(current);
+        ArrayList<Edge> edges = adjacencyList.get(current);
 
-        for (int neighbor : neighbors) {
+        for (Edge edge : edges) {
+            int neighbor = edge.getDestination().getId();
+
             if (!visited.get(neighbor)) {
                 dfsSilentHelper(neighbor, visited);
             }
         }
+    }
+
+    public void dijkstra(int start) {
+        HashMap<Integer, Integer> distance = new HashMap<>();
+        HashMap<Integer, Boolean> visited = new HashMap<>();
+
+        for (int vertex : vertices.keySet()) {
+            distance.put(vertex, Integer.MAX_VALUE);
+            visited.put(vertex, false);
+        }
+
+        distance.put(start, 0);
+
+        for (int i = 0; i < vertices.size(); i++) {
+            int current = getMinimumDistanceVertex(distance, visited);
+
+            if (current == -1) {
+                break;
+            }
+
+            visited.put(current, true);
+
+            ArrayList<Edge> edges = adjacencyList.get(current);
+
+            for (Edge edge : edges) {
+                int neighbor = edge.getDestination().getId();
+                int weight = edge.getWeight();
+
+                if (!visited.get(neighbor) && distance.get(current) != Integer.MAX_VALUE) {
+                    int newDistance = distance.get(current) + weight;
+
+                    if (newDistance < distance.get(neighbor)) {
+                        distance.put(neighbor, newDistance);
+                    }
+                }
+            }
+        }
+
+        System.out.println("Dijkstra shortest distances from vertex " + start + ":");
+
+        for (int vertex : distance.keySet()) {
+            System.out.println(start + " -> " + vertex + " = " + distance.get(vertex));
+        }
+    }
+
+    private int getMinimumDistanceVertex(HashMap<Integer, Integer> distance, HashMap<Integer, Boolean> visited) {
+        int minDistance = Integer.MAX_VALUE;
+        int minVertex = -1;
+
+        for (int vertex : vertices.keySet()) {
+            if (!visited.get(vertex) && distance.get(vertex) < minDistance) {
+                minDistance = distance.get(vertex);
+                minVertex = vertex;
+            }
+        }
+
+        return minVertex;
     }
 }

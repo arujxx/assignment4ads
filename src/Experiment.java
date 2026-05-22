@@ -35,6 +35,7 @@ public class Experiment {
         largeDfsTime = measureDfsTime(largeGraph);
 
         printResults();
+        runDijkstraBonusTest();
     }
 
     private Graph createGraph(int size) {
@@ -80,5 +81,26 @@ public class Experiment {
         System.out.println("30 vertices DFS: " + mediumDfsTime + " ns");
         System.out.println("100 vertices BFS: " + largeBfsTime + " ns");
         System.out.println("100 vertices DFS: " + largeDfsTime + " ns");
+    }
+    public void runDijkstraBonusTest() {
+        Graph graph = new Graph();
+
+        for (int i = 0; i < 6; i++) {
+            graph.addVertex(new Vertex(i));
+        }
+
+        graph.addEdge(0, 1, 4);
+        graph.addEdge(0, 2, 2);
+        graph.addEdge(1, 2, 1);
+        graph.addEdge(1, 3, 5);
+        graph.addEdge(2, 3, 8);
+        graph.addEdge(2, 4, 10);
+        graph.addEdge(3, 4, 2);
+        graph.addEdge(3, 5, 6);
+        graph.addEdge(4, 5, 3);
+
+        System.out.println("BONUS TASK: DIJKSTRA ALGORITHM");
+        graph.printGraph();
+        graph.dijkstra(0);
     }
 }

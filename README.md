@@ -313,3 +313,178 @@ The program can:
 - measure execution time for different graph sizes
 
 The experiment showed that BFS and DFS both work efficiently and follow the expected time complexity of O(V + E).
+
+---
+
+## Bonus Task: Dijkstra's Algorithm
+
+For the bonus task, I extended the graph implementation to support weighted edges and implemented Dijkstra's Algorithm.
+
+The goal of this bonus task was to find the shortest path from one starting vertex to all other vertices in a weighted graph.
+
+### What Was Added
+
+- Added a `weight` field to the `Edge` class.
+- Updated the `Edge` constructor to store source, destination, and weight.
+- Changed the graph adjacency list to store `Edge` objects instead of only integer vertex IDs.
+- Added an overloaded method `addEdge(int from, int to, int weight)`.
+- Implemented the method `dijkstra(int start)` in the `Graph` class.
+- Added a bonus test in the `Experiment` class.
+
+### Updated Edge Class
+
+Before the bonus task, the `Edge` class stored only the source and destination vertices.
+
+For the bonus task, I added a weight field:
+
+```java
+private int weight;
+```
+
+Now each edge stores:
+
+- source vertex
+- destination vertex
+- weight
+
+Example:
+
+```java
+graph.addEdge(0, 1, 4);
+```
+
+This means that vertex `0` is connected to vertex `1` with weight `4`.
+
+### Updated Graph Structure
+
+Before the bonus task, the adjacency list stored only connected vertex IDs:
+
+```java
+private HashMap<Integer, ArrayList<Integer>> adjacencyList;
+```
+
+After the bonus task, the adjacency list stores weighted edges:
+
+```java
+private HashMap<Integer, ArrayList<Edge>> adjacencyList;
+```
+
+This allows the graph to store both the connected vertex and the weight of the edge.
+
+### Dijkstra's Algorithm
+
+Dijkstra's Algorithm is used to find the shortest distance from one starting vertex to all other vertices in a weighted graph.
+
+In this project, the method is:
+
+```java
+public void dijkstra(int start)
+```
+
+The algorithm uses:
+
+- a `distance` map to store the shortest known distance to each vertex
+- a `visited` map to mark vertices that were already processed
+- simple loops to find the unvisited vertex with the smallest distance
+
+A priority queue was not used because the bonus task allowed a simple implementation with arrays or loops.
+
+### How the Algorithm Works
+
+The algorithm starts from the selected starting vertex.
+
+The distance from the starting vertex to itself is set to `0`.
+
+All other distances are first set to a very large value:
+
+```java
+Integer.MAX_VALUE
+```
+
+Then the algorithm repeatedly chooses the unvisited vertex with the smallest current distance.
+
+After that, it checks all neighbors of this vertex.
+
+If a shorter path to a neighbor is found, the distance is updated.
+
+### Example Weighted Graph
+
+```java
+graph.addEdge(0, 1, 4);
+graph.addEdge(0, 2, 2);
+graph.addEdge(1, 2, 1);
+graph.addEdge(1, 3, 5);
+graph.addEdge(2, 3, 8);
+graph.addEdge(2, 4, 10);
+graph.addEdge(3, 4, 2);
+graph.addEdge(3, 5, 6);
+graph.addEdge(4, 5, 3);
+```
+
+### Example Output
+### Dijkstra Output Screenshot
+
+![Dijkstra Output](./docs/screenshots/dijkstra-output.png)
+```text
+BONUS TASK: DIJKSTRA ALGORITHM
+
+Graph adjacency list:
+0: 1(4) 2(2)
+1: 0(4) 2(1) 3(5)
+2: 0(2) 1(1) 3(8) 4(10)
+3: 1(5) 2(8) 4(2) 5(6)
+4: 2(10) 3(2) 5(3)
+5: 3(6) 4(3)
+
+Dijkstra shortest distances from vertex 0:
+0 -> 0 = 0
+0 -> 1 = 3
+0 -> 2 = 2
+0 -> 3 = 8
+0 -> 4 = 10
+0 -> 5 = 13
+```
+
+### Explanation of Result
+
+The shortest distance from vertex `0` to itself is `0`.
+
+The shortest distance from vertex `0` to vertex `2` is `2`, because there is a direct edge:
+
+```text
+0 -> 2
+```
+
+The shortest distance from vertex `0` to vertex `1` is `3`.
+
+Even though there is a direct edge:
+
+```text
+0 -> 1 = 4
+```
+
+there is a shorter path:
+
+```text
+0 -> 2 -> 1
+```
+
+The total distance is:
+
+```text
+2 + 1 = 3
+```
+
+So the algorithm updates the shortest distance to vertex `1`.
+
+### Conclusion
+
+The bonus task improved the graph project by adding support for weighted graphs.
+
+Now the program can:
+
+- store weighted edges
+- print weighted adjacency lists
+- calculate shortest distances using Dijkstra's Algorithm
+
+This makes the graph implementation more useful because it can now work with weighted connections, not only simple unweighted traversal.
